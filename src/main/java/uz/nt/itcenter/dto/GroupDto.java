@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 import uz.nt.itcenter.model.Assistant;
 
 import java.sql.Time;
@@ -25,6 +26,6 @@ public class GroupDto {
     private List<DayOfWeek> day;
     private Time time;
     private Timestamp createdAt;
-    private String image;
+    private MultipartFile image;
     private String classroom_name;
 }

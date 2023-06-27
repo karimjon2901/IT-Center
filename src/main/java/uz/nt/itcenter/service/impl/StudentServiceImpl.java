@@ -6,6 +6,7 @@ import uz.nt.itcenter.dto.ResponseDto;
 import uz.nt.itcenter.dto.StudentDto;
 import uz.nt.itcenter.model.Student;
 import uz.nt.itcenter.repository.StudentRepository;
+import uz.nt.itcenter.service.ImageService;
 import uz.nt.itcenter.service.StudentService;
 import uz.nt.itcenter.service.mapper.StudentMapper;
 
@@ -20,10 +21,13 @@ import static uz.nt.itcenter.appStatus.AppStatusMessages.*;
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final ImageService imageService;
 
     @Override
     public ResponseDto<StudentDto> add(StudentDto studentDto) {
         try{
+            imageService.saveFile(studentDto.getImage());
+
             studentRepository.save(studentMapper.toEntity(studentDto));
             return ResponseDto.<StudentDto>builder()
                     .message(OK)
@@ -130,6 +134,10 @@ public class StudentServiceImpl implements StudentService {
             }
             if (studentDto.getPassword() != null){
                 student.setPassword(studentDto.getPassword());
+            }
+            if (studentDto.getImage() != null){
+                String imageUrl = imageService.saveFile(studentDto.getImage());
+                student.setImage(imageUrl);
             }
 
             studentRepository.save(student);

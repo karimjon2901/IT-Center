@@ -7,6 +7,7 @@ import uz.nt.itcenter.dto.ResponseDto;
 import uz.nt.itcenter.model.Group;
 import uz.nt.itcenter.repository.GroupRepository;
 import uz.nt.itcenter.service.GroupService;
+import uz.nt.itcenter.service.ImageService;
 import uz.nt.itcenter.service.mapper.GroupMapper;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import static uz.nt.itcenter.appStatus.AppStatusMessages.*;
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final GroupMapper groupMapper;
+    private final ImageService imageService;
 
     @Override
     public ResponseDto<GroupDto> add(GroupDto groupDto) {
@@ -130,6 +132,10 @@ public class GroupServiceImpl implements GroupService {
             }
             if (groupDto.getDay() != null){
                 group.setDay(groupDto.getDay());
+            }
+            if (groupDto.getImage() != null){
+                String imageUrl = imageService.saveFile(groupDto.getImage());
+                group.setImage(imageUrl);
             }
 
             groupRepository.save(group);
