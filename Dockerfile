@@ -1,9 +1,4 @@
 FROM openjdk:17
-COPY .mvn/ .mvn
-COPY .mvn pom.xml ./
-
-RUN ./mvnw dependency:resolve
-
-COPY src ./src
-
-CMD ["./mvnw", "spring-boot:run"]
+EXPOSE 9099
+ADD target/spring-boot-docker.jar spring-boot-docker.jar
+ENTRYPOINT ["java", "-jar", "/spring-boot-docker.jar"]
