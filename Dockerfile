@@ -1,5 +1,4 @@
 FROM openjdk:17
 EXPOSE 9099
-
-COPY . .
-ENTRYPOINT ["java", "-jar", "/maven-wrapper.jar"]
+COPY target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
