@@ -1,11 +1,9 @@
-FROM ubuntu:latest  AS build
-
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
-COPY . .
+FROM openjdk:17
+COPY .mvn/ .mvn
+COPY .mvnw pom.xml ./
 
 RUN ./mvnw dependency:resolve
 
-FROM openjdk:17-jdk-slim
+COPY src ./src
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["./mvnw", "spring-boot:run"]
