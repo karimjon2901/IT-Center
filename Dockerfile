@@ -1,6 +1,6 @@
 FROM openjdk:17
 COPY .mvn/ .mvn
-COPY .mvnw pom.xml ./
+COPY .mvn pom.xml ./
 
 RUN ./mvnw dependency:resolve
 
