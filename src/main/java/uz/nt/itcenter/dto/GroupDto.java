@@ -1,6 +1,5 @@
 package uz.nt.itcenter.dto;
 
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +20,11 @@ public class GroupDto {
     private String direction;
     private Integer group_number;
     private String teacher;
-    @ManyToOne
     private Assistant assistant;
     private List<DayOfWeek> day;
     private Time time;
     private Timestamp createdAt;
     private MultipartFile image;
+    private String imageUrl;
     private String classroom_name;
 }

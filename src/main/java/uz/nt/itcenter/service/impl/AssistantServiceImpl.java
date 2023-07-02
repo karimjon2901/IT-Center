@@ -1,13 +1,18 @@
 package uz.nt.itcenter.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.nt.itcenter.dto.AssistantDto;
+import uz.nt.itcenter.dto.GroupDto;
 import uz.nt.itcenter.dto.ResponseDto;
 import uz.nt.itcenter.model.Assistant;
 import uz.nt.itcenter.repository.AssistantRepository;
+import uz.nt.itcenter.repository.GroupRepository;
 import uz.nt.itcenter.service.AssistantService;
 import uz.nt.itcenter.service.mapper.AssistantMapper;
+import uz.nt.itcenter.service.mapper.GroupMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +26,8 @@ import static uz.nt.itcenter.appStatus.AppStatusMessages.*;
 public class AssistantServiceImpl implements AssistantService {
     private final AssistantRepository assistantRepository;
     private final AssistantMapper assistantMapper;
+    private final GroupRepository groupRepository;
+    private final GroupMapper groupMapper;
 
     @Override
     public ResponseDto<AssistantDto> add(AssistantDto assistantDto) {
@@ -74,16 +81,26 @@ public class AssistantServiceImpl implements AssistantService {
     }
 
     @Override
-    public ResponseDto<List<AssistantDto>> getAll() {
+    public ResponseDto<Page<AssistantDto>> getAll(Integer size, Integer page) {
+        Long count = assistantRepository.count();
+
+        PageRequest pageRequest = PageRequest.of(
+                (count / size) <= page ?
+                        (count % size == 0 ? (int) (count / size) - 1
+                                : (int) (count / size))
+                        : page,
+                size
+        );
         try{
-            return ResponseDto.<List<AssistantDto>>builder()
+            Page<AssistantDto> all = assistantRepository.findAll(pageRequest).map(assistantMapper::toDto);
+            return ResponseDto.<Page<AssistantDto>>builder()
                     .message(OK)
                     .code(OK_CODE)
                     .success(true)
-                    .data(assistantRepository.findAllByIsActiveIsTrue().stream().map(assistantMapper::toDto).toList())
+                    .data(all)
                     .build();
         } catch (Exception e){
-            return ResponseDto.<List<AssistantDto>>builder()
+            return ResponseDto.<Page<AssistantDto>>builder()
                     .code(DATABASE_ERROR_CODE)
                     .message(DATABASE_ERROR + " : " + e.getMessage())
                     .build();
@@ -187,5 +204,22 @@ public class AssistantServiceImpl implements AssistantService {
                     .message(DATABASE_ERROR + " : " + e.getMessage())
                     .build();
         }
+    }
+
+    @Override
+    public ResponseDto<List<GroupDto>> getGroups(Integer id) {
+        if (id == null){
+            return ResponseDto.<List<GroupDto>>builder()
+                    .message(NULL_VALUE)
+                    .code(VALIDATION_ERROR_CODE)
+                    .build();
+        }
+
+        return ResponseDto.<List<GroupDto>>builder()
+                .message(OK)
+                .success(true)
+                .code(OK_CODE)
+                .data(groupRepository.findAllByIsActiveIsTrueAndAssistantId(id).stream().map(groupMapper::toDto).toList())
+                .build();
     }
 }

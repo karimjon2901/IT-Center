@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Getter
@@ -25,6 +24,7 @@ public class Student {
     private String password;
     private String gender;
     private String image;
-//    private Group group;
+    @ManyToOne
+    private Groups group;
     private Boolean isActive=true;
 }

@@ -18,6 +18,8 @@ public class StudentDto {
     private String phoneNumber;
     private String username;
     private String password;
+    private GroupDto groupDto;
     private String gender;
     private MultipartFile image;
+    private String imageUrl;
 }

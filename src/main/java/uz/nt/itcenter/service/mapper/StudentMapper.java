@@ -11,10 +11,10 @@ import uz.nt.itcenter.service.ImageService;
 @Mapper(componentModel = "spring")
 @RequiredArgsConstructor
 public abstract class StudentMapper implements CommonMapper<StudentDto, Student>{
-    @Autowired
     ImageService imageService;
     @Override
-    @Mapping(target = "image", expression = "java(imageService.getImage(student.getImage()))")
+    @Mapping(target = "imageUrl", expression = "java(student.getImage())")
+    @Mapping(target = "image", expression = "java(null)")
     public abstract StudentDto toDto(Student student);
 
     @Override

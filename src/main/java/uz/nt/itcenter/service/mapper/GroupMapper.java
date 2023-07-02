@@ -2,21 +2,24 @@ package uz.nt.itcenter.service.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.beans.factory.annotation.Autowired;
 import uz.nt.itcenter.dto.GroupDto;
-import uz.nt.itcenter.model.Group;
+import uz.nt.itcenter.model.Groups;
+import uz.nt.itcenter.repository.StudentRepository;
 import uz.nt.itcenter.service.ImageService;
-import uz.nt.itcenter.service.impl.ImageServiceImpl;
 
 @Mapper(componentModel = "spring")
-public abstract class GroupMapper implements CommonMapper<GroupDto, Group> {
-    @Autowired
+public abstract class GroupMapper implements CommonMapper<GroupDto, Groups> {
     ImageService imageService;
+    StudentRepository studentRepository;
+
     @Override
-    @Mapping(target = "image", expression = "java(imageService.getImage(group.getImage()))")
-    public abstract GroupDto toDto(Group group);
+    @Mapping(target = "imageUrl", expression = "java(groups.getImage())")
+    @Mapping(target = "image", expression = "java(null)")
+//    @Mapping(target = "students", expression = "java(studentRepository.findAllByGroupIdAndIsActiveIsTrue(groups.getId()))")
+    public abstract GroupDto toDto(Groups groups);
 
     @Override
     @Mapping(target = "image", expression = "java(imageService.saveFile(groupDto.getImage()))")
-    public abstract Group toEntity(GroupDto groupDto);
+//    @Mapping(target = "students", expression = "java(groupDto.getStudents().stream().forEach(s -> s.setImage(imageService.saveFile(s.getImage()))))")
+    public abstract Groups toEntity(GroupDto groupDto);
 }

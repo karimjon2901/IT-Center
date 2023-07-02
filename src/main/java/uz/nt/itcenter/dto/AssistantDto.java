@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+import uz.nt.itcenter.model.Groups;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,5 +25,6 @@ public class AssistantDto {
     private String password;
     private String gender;
     private MultipartFile image;
-    //    private Group group;
+    private String imageUrl;
+    private List<GroupDto> group;
 }

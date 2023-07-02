@@ -1,6 +1,8 @@
 package uz.nt.itcenter.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.nt.itcenter.dto.ResponseDto;
 import uz.nt.itcenter.dto.StudentDto;
@@ -10,7 +12,6 @@ import uz.nt.itcenter.service.ImageService;
 import uz.nt.itcenter.service.StudentService;
 import uz.nt.itcenter.service.mapper.StudentMapper;
 
-import java.util.List;
 import java.util.Optional;
 
 import static uz.nt.itcenter.appStatus.AppStatusCodes.*;
@@ -29,6 +30,7 @@ public class StudentServiceImpl implements StudentService {
             imageService.saveFile(studentDto.getImage());
 
             studentRepository.save(studentMapper.toEntity(studentDto));
+
             return ResponseDto.<StudentDto>builder()
                     .message(OK)
                     .code(OK_CODE)
@@ -77,16 +79,26 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseDto<List<StudentDto>> getAll() {
+    public ResponseDto<Page<StudentDto>> getAll(Integer size, Integer page) {
+        Long count = studentRepository.count();
+
+        PageRequest pageRequest = PageRequest.of(
+                (count / size) <= page ?
+                        (count % size == 0 ? (int) (count / size) - 1
+                                : (int) (count / size))
+                        : page,
+                size
+        );
         try{
-            return ResponseDto.<List<StudentDto>>builder()
+            Page<StudentDto> all = studentRepository.findAll(pageRequest).map(studentMapper::toDto);
+            return ResponseDto.<Page<StudentDto>>builder()
                     .message(OK)
                     .code(OK_CODE)
                     .success(true)
-                    .data(studentRepository.findAllByIsActiveIsTrue().stream().map(studentMapper::toDto).toList())
+                    .data(all)
                     .build();
         } catch (Exception e){
-            return ResponseDto.<List<StudentDto>>builder()
+            return ResponseDto.<Page<StudentDto>>builder()
                     .code(DATABASE_ERROR_CODE)
                     .message(DATABASE_ERROR + " : " + e.getMessage())
                     .build();

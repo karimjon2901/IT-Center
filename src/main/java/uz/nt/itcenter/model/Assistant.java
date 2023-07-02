@@ -1,13 +1,12 @@
 package uz.nt.itcenter.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +27,7 @@ public class Assistant {
     private String password;
     private String gender;
     private String image;
-    //    private Group group;
+    @OneToMany
+    private List<Groups> groups;
     private Boolean isActive;
 }
