@@ -1,4 +1,5 @@
 FROM openjdk:17
 EXPOSE 9099
-ADD target/spring-boot-docker.jar spring-boot-docker.jar
+
+COPY . .
 ENTRYPOINT ["java", "-jar", "/spring-boot-docker.jar"]
