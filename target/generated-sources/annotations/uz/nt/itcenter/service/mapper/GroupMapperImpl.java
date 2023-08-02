@@ -10,7 +10,7 @@ import uz.nt.itcenter.model.Groups;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-07-02T11:03:32+0500",
+    date = "2023-07-02T17:54:10+0500",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.7 (Amazon.com Inc.)"
 )
 @Component
